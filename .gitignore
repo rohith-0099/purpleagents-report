@@ -1,0 +1,8 @@
+report/*.aux
+report/*.log
+report/*.lof
+report/*.toc
+report/*.out
+docs/diagrams/*.json
+.archify/
+report/*.lot
