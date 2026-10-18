@@ -1,0 +1,52 @@
+\chapter{Feasibility Study}
+\label{ch:feas}
+
+\section{Technical Feasibility}
+
+Every part of PurpleAgents is built from existing, proven building blocks. The
+target model is a ready-made open-source model. The red and blue sides use
+open-source tools. The dual-reasoning engine is built by prompting a reasoning
+model and adding simple comparison logic, so no new model needs to be trained.
+Connecting to the target is a standard API call. The project is therefore
+technically feasible with current, freely available technology.
+
+\section{Economic Feasibility}
+
+All models, tools, datasets, and frameworks used in the project are free and
+open-source. The system can run on a student laptop with a local model, or use
+the free tier of a cloud-hosted model API. There are no licensing costs. The
+project is therefore economically feasible at essentially zero cost.
+
+\section{Schedule and Resource Feasibility}
+
+The work is planned across an eight-month timeline, from M1 to M8, as shown in
+Table~\ref{tab:timeline}. Phase~1 (this report) covers the literature survey,
+problem definition, and design. The remaining months cover building, testing,
+and documenting the system.
+
+\begin{table}[H]
+\centering
+\caption{Project timeline (M1--M8)}
+\label{tab:timeline}
+\begin{tabularx}{\textwidth}{@{}p{0.1\textwidth} Y p{0.24\textwidth}@{}}
+\toprule
+\textbf{Month} & \textbf{Activities} & \textbf{Output} \\
+\midrule
+M1 & Literature survey and problem definition & Research gap, problem statement \\
+M2 & System and architecture design & Architecture, algorithm, this report \\
+M3 & Environment setup: target model, guardrail toolkit, judge, attack and benign prompt sets & Working safe test environment \\
+M4 & Red and blue agent development & Attack and defense modules \\
+M5 & Dual-reasoning engine development & Evidence-first, hypothesis-first, convergence \\
+M6 & Validation layer, reflection, and auditable memory & Caught/missed check, fix re-testing, audit records \\
+M7 & Integration of all components; testing and evaluation over repeated rounds & Measured ASR, DR, false-flag rate \\
+M8 & Documentation, CLI demonstration, and final presentation & Final report and demo \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The team of three will divide the work by module: one member on the red side and
+target setup, one on the blue side and validation, and one on the reasoning
+engine and memory, with all three sharing integration, evaluation, and
+documentation. A team of three students can complete this work within the
+available time. The project is therefore feasible in terms of schedule and
+resources.
