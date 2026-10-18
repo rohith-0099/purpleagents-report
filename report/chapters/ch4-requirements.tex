@@ -1,0 +1,92 @@
+\chapter{Requirements Specification}
+\label{ch:req}
+
+\section{Functional Requirements}
+
+\begin{enumerate}[label=\textbf{FR\arabic*.}, widest=10, leftmargin=*]
+  \item The system shall connect to a target AI model through its text API, send
+  prompts, and read responses.
+  \item The red agent shall select attack prompts from a prepared set and/or
+  generate new ones, covering known attack categories.
+  \item The blue agent shall detect and block unsafe responses using guardrails
+  and output filters, and shall label each response as safe or unsafe.
+  \item The system shall collect evidence for every attack: the prompt, the
+  model's response, whether the model refused or complied, and any guardrail
+  signal.
+  \item The dual-reasoning engine shall produce an evidence-first conclusion and a
+  hypothesis-first conclusion, and shall accept a result only when both agree.
+  Otherwise, it shall mark the result as low-confidence and flag it for a human.
+  \item For a missed attack, the reflection step shall find the root cause and
+  propose a concrete, testable fix.
+  \item The validation step shall re-test each fix to confirm that it blocks the
+  attack.
+  \item The system shall store evidence, reasoning path, confidence, outcome, and
+  lessons in an auditable memory.
+  \item The learning loop shall apply verified lessons to the next cycle.
+  \item Human approval shall be required before deploying fixes or other
+  high-impact changes.
+\end{enumerate}
+
+\section{Non-Functional Requirements}
+
+\begin{itemize}
+  \item \textbf{Performance:} the system should complete one
+  attack--reason--validate cycle in a reasonable time.
+  \item \textbf{Accuracy:} dual-path reasoning should reduce wrong conclusions
+  compared with a single reasoning path.
+  \item \textbf{Reliability:} the system should run repeated cycles without
+  losing memory or state.
+  \item \textbf{Usability:} the system should produce clear logs and summaries of
+  what was attacked, what was caught, and what was fixed.
+  \item \textbf{Scalability and Extensibility:} the system should work with any
+  target that exposes a text API, and it should be easy to add new attack
+  categories.
+  \item \textbf{Security and Privacy:} the system should operate only on an
+  authorized target, use no real user data, and keep all testing inside a
+  controlled environment.
+\end{itemize}
+
+\section{Hardware Requirements}
+
+\begin{itemize}
+  \item Multi-core CPU and 16\,GB or more of RAM.
+  \item Optional GPU. This helps when running a local open-source model, but it
+  is not required when using a cloud-hosted model through an API.
+  \item Sufficient storage (an SSD is recommended).
+  \item A reliable internet connection (required when using a cloud-hosted
+  model).
+\end{itemize}
+
+\section{Software Requirements}
+
+\begin{itemize}
+  \item Operating system: Windows or Linux.
+  \item Python 3.10 or higher.
+  \item Standard AI/agent and HTTP libraries.
+  \item Open-source red-teaming and attack-generation tools.
+  \item An open-source guardrail / safety-classifier toolkit (for the blue side).
+  \item Access to an open-source LLM, run locally or through a cloud-hosted
+  inference API.
+\end{itemize}
+
+\section{Constraints and Assumptions}
+
+\subsection{Constraints}
+\begin{enumerate}
+  \item Phase~1 targets AI systems (LLM, chatbot, or agent) that are reached
+  through a text API.
+  \item Attacks are performed only on a target that the team controls and is
+  authorized to test --- never on live third-party services.
+  \item The project uses pre-trained open-source models. It does not train a
+  foundation model from scratch.
+  \item Evaluation uses a limited set of attack categories and prompts because of
+  time and compute limits.
+\end{enumerate}
+
+\subsection{Assumptions}
+\begin{enumerate}
+  \item The target model exposes a text input/output API.
+  \item The attack categories drawn from public sources reasonably cover current
+  threats.
+  \item A human reviewer is available to approve high-impact changes.
+\end{enumerate}
