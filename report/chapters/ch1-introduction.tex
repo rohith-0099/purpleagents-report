@@ -1,0 +1,155 @@
+\chapter{Introduction}
+
+AI systems such as chatbots and agents built on large language models (LLMs) are
+now used almost everywhere. They answer customer questions, help people write
+code, power search, and automate everyday tasks. As these systems spread, so do
+the ways they can be misused. An attacker can trick a model into producing unsafe
+or confidential output by using carefully written prompts. Two common examples are
+\emph{jailbreak} prompts, which make a model ignore its safety rules, and
+\emph{prompt injection}, where hidden instructions take control of the model's
+behaviour.
+
+Keeping these systems safe is hard because the threats keep changing. A one-time
+safety check is not enough. New attack tricks appear all the time, and a model
+that was safe last month may become unsafe after an update.
+
+The usual approach to this problem is fragmented. Red teams (attackers) test for
+weaknesses only now and then. Blue teams (defenders) respond after an alert has
+been raised. The lessons learned from each test are not reliably turned into
+stronger defense. The two sides rarely work together inside one system that keeps
+improving on its own.
+
+\textbf{PurpleAgents} is proposed to fix this. It is an autonomous
+\emph{purple-team} framework that continuously attacks and defends a target AI
+model inside a safe, authorized environment. It checks every conclusion using
+two independent lines of reasoning, and it learns from every missed attack so
+that the defense keeps getting better.
+
+\section{Motivation}
+
+Three trends make this project timely.
+
+\begin{itemize}
+  \item \textbf{AI is now a front door.} Many organisations place a chatbot or an
+  AI agent directly in front of their customers, staff, or internal data. A single
+  successful jailbreak can expose private information, produce harmful content
+  under the organisation's name, or make an agent take an action it should not.
+  The cost of a missed attack is therefore real and immediate.
+
+  \item \textbf{Attacks are getting cheaper.} Recent research shows that LLM-based
+  agents can plan and carry out attacks on their own~\cite{fang2024hack,
+  xu2025forewarned}. When attacks can be automated, defense that depends on
+  occasional human testing falls behind. Defense must also become continuous and
+  automatic.
+
+  \item \textbf{Single signals are unreliable.} A safety filter or an LLM ``judge''
+  can be wrong. If a system trusts one signal, it can miss an attack or block a
+  harmless request without anyone noticing. Checking every decision in two
+  independent ways is a simple, practical way to catch such mistakes.
+\end{itemize}
+
+The literature already describes the idea of a purple agent that passes lessons
+between attacker and defender~\cite{li2025shields}, but it does not build one with
+verified reasoning and a learning loop. This gap, together with the trends above,
+is the motivation for PurpleAgents.
+
+\section{Existing System}
+
+Today's AI-safety and testing tools each cover only one part of the problem.
+
+\begin{itemize}
+  \item \textbf{Red-team / attack tools} can automatically generate jailbreaks and
+  injection prompts. However, they only \emph{find} weaknesses. They do not defend
+  the system, and they do not learn from what they find.
+  \item \textbf{Defensive tools} such as guardrails and output filters can block
+  some unsafe responses. However, they react to single signals and are often
+  bypassed when an attacker uses new phrasing.
+  \item \textbf{Manual purple teaming} brings humans into the loop. However, it is
+  slow, happens only periodically, and depends heavily on expert effort.
+\end{itemize}
+
+In summary, existing systems suffer from the following problems:
+
+\begin{itemize}
+  \item \textbf{Fragmentation:} attack and defense are kept separate, so lessons
+  are not shared between them.
+  \item \textbf{Single-path decisions:} one alert or one score is trusted, so a
+  wrong call or a missed attack goes unchecked.
+  \item \textbf{No structured learning:} a missed attack is logged as a failure,
+  not turned into a reusable lesson.
+  \item \textbf{Periodic, manual effort:} testing happens occasionally, not
+  continuously.
+\end{itemize}
+
+\section{Problem Statement}
+
+There is a need for an intelligent system that can continuously attack an AI
+model, defend it, verify its own conclusions, and learn from every missed attack
+--- all on its own, in a safe and authorized environment. Current tools cannot do
+this. They solve only one piece of the problem (attack, or defense, or
+reasoning), they rely on a single reasoning path, and they do not convert
+failures into verified, reusable lessons. This gap leaves AI systems exposed to
+new and evolving attacks.
+
+\section{Objectives}
+
+The objectives of this project are:
+
+\begin{enumerate}
+  \item To build an autonomous purple-team framework in which attack and defense
+  agents run continuously against a target AI model.
+  \item To introduce a \textbf{dual-reasoning engine}, so that a conclusion is
+  accepted only when an evidence-first path and a hypothesis-first path agree.
+  \item To detect attacks and, for every missed attack, find the exact reason it
+  was missed.
+  \item To generate testable defensive improvements, such as stronger guardrail
+  rules.
+  \item To keep an auditable memory of evidence, reasoning, confidence, and
+  outcome.
+  \item To close the loop, so that each missed attack becomes a verified lesson
+  that strengthens the defense, with human approval on key changes.
+  \item To show, through repeated attack--defend cycles, that the defense
+  measurably improves over time.
+\end{enumerate}
+
+\section{Applications}
+
+PurpleAgents is intended for any organisation that builds, deploys, or protects
+AI systems. The main users are:
+
+\begin{itemize}
+  \item \textbf{Companies deploying chatbots and AI assistants.} Banks, online
+  stores, hospitals, and service providers that put a chatbot in front of their
+  customers can use PurpleAgents to test it continuously before and after each
+  update, and to strengthen its guardrails over time.
+
+  \item \textbf{AI and LLM providers.} Teams that build or fine-tune language
+  models can use the framework as an automated safety check during development. A
+  model can be attacked in repeated rounds, and the lessons can be turned into
+  better safety rules before release.
+
+  \item \textbf{Security Operations Centre (SOC) teams.} SOC analysts who are
+  responsible for AI systems can use the auditable memory as a clear record of
+  what was attacked, how it was judged, and what was fixed. Low-confidence cases
+  are sent to them for review instead of being decided silently.
+
+  \item \textbf{Developers of AI agents.} Agents that read web pages, e-mails,
+  or documents are exposed to prompt injection. PurpleAgents can test such agents
+  against injection attacks inside a safe environment.
+
+  \item \textbf{Education and research.} The framework can be used in teaching
+  and research to show how attack, defense, and reasoning work together, and to
+  compare different guardrail strategies in a fair, repeatable way.
+\end{itemize}
+
+\section{Organization of the Report}
+
+The rest of this report is organized as follows. Chapter~\ref{ch:lit} reviews
+related research on autonomous attackers, autonomous defenders, and reasoning
+methods. Chapter~\ref{ch:problem} defines the problem and the scope of the
+project. Chapter~\ref{ch:req} lists the functional, non-functional, hardware, and
+software requirements. Chapter~\ref{ch:design} presents the system design, the
+proposed architecture, the dual-reasoning engine, and the algorithm.
+Chapter~\ref{ch:analysis} covers the tools, the data sources, and the evaluation
+plan. Chapter~\ref{ch:feas} presents the feasibility study and the project timeline,
+and Chapter~\ref{ch:concl} states the expected outcomes and concludes the report.
