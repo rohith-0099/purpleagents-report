@@ -1,0 +1,32 @@
+\chapter*{LIST OF SYMBOLS}
+\addcontentsline{toc}{chapter}{LIST OF SYMBOLS}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{>{\raggedright\arraybackslash}p{0.18\textwidth} p{0.72\textwidth}}
+\hline
+\textbf{Symbol} & \textbf{Meaning} \\
+\hline
+ASR & Attack Success Rate (fraction of attacks that got through) \\
+DR & Detection rate / catch-rate, $\mathrm{DR} = 1 - \mathrm{ASR}$ \\
+$E$ & Evidence bundle \{prompt, response, refused/complied, guardrail signal\} \\
+$H$ & Hypothesis set (list of known attack categories) \\
+$A$ & Evidence-first conclusion \\
+$B$ & Hypothesis-first conclusion \\
+$C$ & Confidence level of an accepted conclusion \\
+$r$ & Round index \\
+$\mathrm{ASR}_r$ & Attack success rate at round $r$ \\
+$\theta$ & Agreement / convergence threshold \\
+$\Delta\mathrm{DR}$ & Improvement in detection rate relative to round 1, $\mathrm{DR}_r - \mathrm{DR}_1$ \\
+FFR & False-flag rate (fraction of harmless prompts wrongly blocked) \\
+\hline
+\textbf{Abbreviation} & \textbf{Expansion} \\
+\hline
+LLM & Large Language Model \\
+CLI & Command-Line Interface \\
+SOC & Security Operations Centre \\
+OWASP & Open Worldwide Application Security Project \\
+ATLAS & Adversarial Threat Landscape for AI Systems (MITRE) \\
+\hline
+\end{tabular}
+\end{center}
