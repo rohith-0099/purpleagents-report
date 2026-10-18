@@ -1,0 +1,83 @@
+\chapter{Problem Definition}
+\label{ch:problem}
+
+\section{Problem Description}
+
+AI systems are being protected with methods that were designed for a slower,
+more predictable world. The main problems are described below.
+
+\begin{itemize}
+  \item \textbf{Fragmented security:} attackers (red teams) and defenders (blue
+  teams) work separately. A weakness found by the red team is reported, but it is
+  not automatically turned into a better defense. Likewise, what the blue team
+  learns from an alert rarely shapes the next round of testing. Lessons from one
+  side seldom help the other.
+
+  \item \textbf{Periodic, manual testing:} AI systems are tested only now and
+  then, often by hand. Between two tests, weaknesses stay hidden while new attack
+  tricks keep appearing. A model update can also bring back problems that had
+  already been fixed.
+
+  \item \textbf{Single-path trust:} existing tools depend on one alert, one score,
+  or one model's decision. If that single signal is wrong, nothing checks it. A
+  harmless response may be flagged, or, worse, a successful attack may be marked
+  as safe and go unnoticed.
+
+  \item \textbf{No learning from misses:} when an attack slips through, the
+  system records it as a failure. It does not find out \emph{why} the attack
+  succeeded, and it does not turn that reason into a lasting lesson or a concrete
+  fix.
+
+  \item \textbf{Result:} AI systems remain exposed to new and evolving attacks,
+  and their defenses do not improve on their own.
+\end{itemize}
+
+\section{Existing System Limitations}
+
+Table~\ref{tab:limits} links each limitation of current practice to its effect
+on the safety of an AI system.
+
+\begin{table}[H]
+\centering
+\caption{Limitations of existing systems and their impact}
+\label{tab:limits}
+\begin{tabularx}{\textwidth}{@{}p{0.3\textwidth} Y@{}}
+\toprule
+\textbf{Limitation} & \textbf{Impact} \\
+\midrule
+Attack and defense are separate & Weaknesses found by the red team are not turned into defenses automatically; the same attack can succeed again. \\
+Testing is periodic and manual & New attacks and model updates create weaknesses that stay hidden until the next test. \\
+Decisions trust a single signal & A wrong judgement by one filter or one judge goes unchecked, causing missed attacks or wrongly blocked requests. \\
+Misses are logged, not analysed & The root cause of a miss is never found, so the defense does not improve. \\
+Fixes are not re-tested & A new rule may not block the attack, or may break normal use, and nobody notices. \\
+No complete audit trail & It is hard to explain later why a decision was made or why a rule was added. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Scope}
+
+\subsection{In Scope}
+\begin{itemize}
+  \item A framework that attacks and defends a target AI model (an LLM, chatbot,
+  or AI agent) through its text API, inside a safe and authorized environment.
+  \item An autonomous red agent (attack) and blue agent (defense).
+  \item A dual-reasoning engine made of an evidence-first path, a
+  hypothesis-first path, and a convergence check.
+  \item A reflection step that finds the cause of a miss and proposes a fix.
+  \item A validation step that re-tests each fix.
+  \item An auditable memory and a closed learning loop.
+  \item Human approval for high-impact changes.
+  \item Evaluation through repeated attack--defend cycles, measuring how the
+  defense improves.
+\end{itemize}
+
+\subsection{Out of Scope}
+\begin{itemize}
+  \item Attacking live third-party hosted services. Only a target that the team
+  controls is attacked.
+  \item Training a new foundation model from scratch. A ready-made open-source
+  model is used instead.
+  \item Network, host, or hardware attacks outside AI systems.
+  \item Large-scale commercial deployment and large user studies.
+\end{itemize}
