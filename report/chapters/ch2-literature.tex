@@ -1,0 +1,250 @@
+\chapter{Literature Review}
+\label{ch:lit}
+
+% Helper: author/venue line under each paper heading
+\newcommand{\paperinfo}[1]{\noindent\textit{#1}\par\smallskip}
+
+\section{Introduction}
+
+Recent research covers three areas that are relevant to this work: autonomous
+attackers (red), autonomous defenders (blue), and reasoning and learning methods.
+The works reviewed below show that each area is advancing quickly. However, no
+single system joins them into one self-improving loop. All 25 papers were read
+and summarised from their abstracts. They are grouped into six themes, starting
+with the works closest to PurpleAgents.
+
+% -------------------------------------------------------------------
+\section{Autonomous and Agentic Purple Teaming}
+
+\subsection{Toward an Autonomous Purple Teaming Framework for Security and Safety in LLMs (AutoPT)}
+\paperinfo{L. H. Park et al., PRDC 2025~\cite{park2025autopt}}
+This work runs two co-evolving agents in a loop. A red module uses
+coverage-guided fuzzing to find jailbreaks, and a blue module self-heals its
+guardrails using that feedback. It is the closest published match to our idea.
+\textbf{Gap:} it covers LLM safety only and relies on a single measurement score,
+with no dual reasoning.
+
+\subsection{Purple-teaming LLMs with Adversarial Defender Training (PAD)}
+\paperinfo{A. Zhou et al., arXiv:2407.01850, 2024~\cite{zhou2024pad}}
+PAD trains an attacker and a defender together, so that the defender learns to
+catch and explain unsafe responses. We cite it because it shows that red/blue
+co-training works. \textbf{Gap:} it focuses on guardrail training only and does
+not form a closed loop.
+
+\subsection{From Promise to Peril: Rethinking Red and Blue Teaming in the Age of LLMs}
+\paperinfo{A. Abuadbba et al., arXiv:2506.13434, 2025~\cite{abuadbba2025peril}}
+This paper maps the use of LLMs in red and blue teaming onto known security
+frameworks and points out weaknesses such as hallucination. It supports our
+choice to keep humans in the loop. \textbf{Gap:} it is a position paper; no
+system is built.
+
+% -------------------------------------------------------------------
+\section{Offensive (Red) Agents}
+
+\subsection{VulnBot: Autonomous Penetration Testing for a Multi-Agent Collaborative Framework}
+\paperinfo{H. Kong et al., arXiv:2501.13411, 2025~\cite{kong2025vulnbot}}
+VulnBot is a multi-agent LLM system that splits a penetration test into
+reconnaissance, scanning, and exploitation. It gives us a template for
+structuring our red agents. \textbf{Gap:} it covers attack only, with no defense
+or learning.
+
+\subsection{RedTeamLLM: An Agentic AI Framework for Offensive Security}
+\paperinfo{B. Challita and P. Parrend, arXiv:2505.06913 / IFIP AI4S 2025~\cite{challita2025redteamllm}}
+RedTeamLLM is an agentic penetration-testing system built on a
+summarize--reason--act loop. It addresses plan correction and memory. It informs
+the reasoning and memory design of our red side. \textbf{Gap:} it is offensive
+only, with no validation step and no memory of lessons learned.
+
+\subsection{Autonomous Adversary: Red-Teaming in the Age of LLM}
+\paperinfo{A. K. M. Mamun et al., arXiv:2605.06486, 2026~\cite{mamun2026adversary}}
+This work benchmarks LLM-driven attacks and uses an LLM as a judge to check
+whether each attack step succeeded. It informs how our validation step decides
+success. \textbf{Gap:} it is a red-side benchmark with no defense loop.
+
+\subsection{PentestGPT: Evaluating and Harnessing LLMs for Automated Penetration Testing}
+\paperinfo{G. Deng et al., USENIX Security 2024, arXiv:2308.06782~\cite{deng2024pentestgpt}}
+PentestGPT splits the work into three cooperating modules so that the model does
+not lose track of the test. It is a foundation for our modular red agent.
+\textbf{Gap:} it is a penetration-testing tool with single-path reasoning and no
+blue side.
+
+\subsection{AutoAttacker: An LLM-Guided System to Implement Automatic Cyber-attacks}
+\paperinfo{J. Xu et al., arXiv:2403.01038, 2024~\cite{xu2024autoattacker}}
+AutoAttacker focuses on the post-breach, ``hands-on-keyboard'' stage of an
+attack. It shows the kind of post-exploitation actions a red agent may need to
+simulate. \textbf{Gap:} it covers post-breach attacks only, with no defense.
+
+\subsection{LLM Agents Can Autonomously Hack Websites}
+\paperinfo{R. Fang et al., arXiv:2402.06664, 2024~\cite{fang2024hack}}
+This work shows that agents built on a leading LLM can perform SQL injection
+without prior knowledge of the flaw, with a reported success rate of about 73\%.
+It is concrete proof that autonomous attackers are real. \textbf{Gap:} it is an
+attack demonstration with no defense side.
+
+\subsection{On the Feasibility of Using LLMs to Execute Multistage Network Attacks (Incalmo)}
+\paperinfo{B. Singer et al., arXiv:2501.16466, 2025~\cite{singer2025incalmo}}
+This paper finds that plain LLMs fail at multi-host attacks until an abstraction
+layer is added (an attack-graph service, an environment-state service, and an
+action planner). These services resemble our attack-graph reasoning and evidence
+layer. \textbf{Gap:} it addresses attack execution only, with no reasoning or
+learning loop.
+
+% -------------------------------------------------------------------
+\section{Defensive and SOC Agents}
+
+\subsection{CORTEX: Collaborative LLM Agents for High-Stakes Alert Triage}
+\paperinfo{B. Wei et al., arXiv:2510.00311, 2025~\cite{wei2025cortex}}
+In CORTEX, specialised agents collaborate over real evidence: a
+behaviour-analysis agent, evidence-gathering agents, and a reasoning agent that
+makes an auditable decision. It is the closest match to our blue side and our
+evidence-based reasoning. \textbf{Gap:} it performs blue-side triage only, with no
+red side and no loop.
+
+\subsection{Large Language Models for Security Operations Centers: A Comprehensive Survey}
+\paperinfo{arXiv:2509.10858, 2025~\cite{soc2025survey}}
+This survey explains how LLMs fit into the security operations centre (SOC)
+workflow, including triage, correlation, and prioritisation. It grounds what our
+defensive agents are expected to do. \textbf{Gap:} it is a survey; no system is
+built.
+
+\subsection{A Survey of Agentic AI and Cybersecurity: Challenges, Opportunities and Use-case Prototypes}
+\paperinfo{S. J. Lazer et al., arXiv:2601.05293, 2026~\cite{lazer2026agentic}}
+This survey studies agentic AI in security and warns of agent-specific risks
+such as memory poisoning. It also includes prototypes. It supports our
+multi-agent design and our human-approval layer. \textbf{Gap:} it offers a survey
+and prototypes, but no closed loop.
+
+% -------------------------------------------------------------------
+\section{Reinforcement-Learning Cyber Operations}
+
+\subsection{CybORG: An Autonomous Cyber Operations Research Gym}
+\paperinfo{C. Baillie et al., arXiv:2002.10667, 2020~\cite{baillie2020cyborg}}
+CybORG is an open simulation ``gym'' in which red (attacker) and blue (defender)
+agents are trained together using reinforcement learning. It shows the kind of
+safe range needed for co-training agents. \textbf{Gap:} it is a training
+environment only, with no reasoning engine.
+
+\subsection{Deep Reinforcement Learning for Autonomous Cyber Operations: A Survey}
+\paperinfo{C. Palmer et al., arXiv:2310.07745, 2024~\cite{palmer2024drl}}
+This survey frames cyber defense as a game between a blue defender and a red
+attacker and lists the main open challenges. It supports our training setup.
+\textbf{Gap:} it is an RL survey with no dual reasoning.
+
+\subsection{Entity-based Reinforcement Learning for Autonomous Cyber Defence}
+\paperinfo{I. Symes Thompson et al., arXiv:2410.17647, 2024~\cite{symes2024entity}}
+This work builds a defensive agent that keeps working when the network changes,
+by viewing the network as a set of entities. It guides how our defensive agents
+can stay robust across different systems. \textbf{Gap:} it covers defense only and
+uses single-path decisions.
+
+\subsection{Hierarchical Multi-agent Reinforcement Learning for Cyber Network Defense}
+\paperinfo{A. Singh et al., arXiv:2410.17351, AAMAS 2025~\cite{singh2025hmarl}}
+This paper splits defense into sub-tasks handled by several agents under a master
+policy. It is a model for how our blue agents can cooperate. \textbf{Gap:} it
+addresses blue-side coordination only, with no reasoning layer.
+
+\subsection{Towards Autonomous Cyber Operation Agents: Exploring the Red Case}
+\paperinfo{L. Li et al., arXiv:2309.02247, 2023~\cite{li2023redcase}}
+This work trains an attacking red agent with reinforcement learning and studies
+how to make it work across different networks. It supports the building of our
+offensive agents. \textbf{Gap:} it covers red-agent training only.
+
+\subsection{A Red Teaming Framework for Evaluating Robustness of AI-enabled SOAR Systems}
+\paperinfo{A. J. Shaikh et al., arXiv:2605.17075, 2026~\cite{shaikh2026soar}}
+This framework combines an LLM planner with a reinforcement-learning controller
+to run multi-stage attacks against automated defenders. It finds that an LLM
+alone cannot sustain multi-stage attacks. It is a real example of an
+attacker-versus-defender loop. \textbf{Gap:} it focuses on attack testing only,
+with no learning loop.
+
+% -------------------------------------------------------------------
+\section{Dual and Abductive Reasoning}
+
+\subsection{Evidential Cyber Threat Hunting}
+\paperinfo{F. Araujo et al., SIAM AI4CS 2021, arXiv:2104.10319~\cite{araujo2021evidential}}
+This paper proposes a formal reasoning framework that works over three spaces
+--- knowledge, hypothesis, and action --- and attaches a confidence level to each
+conclusion. It is the academic basis of our dual-reasoning engine. \textbf{Gap:} it
+is a reasoning framework only and is not integrated into an attack--defense
+system.
+
+\subsection{Diagnosing Unknown Attacks in Smart Homes Using Abductive Reasoning}
+\paperinfo{K. Ramkumar et al., IEEE, arXiv:2412.10738, 2025~\cite{ramkumar2025abductive}}
+This work combines anomaly detection with abductive reasoning to find the class
+of an unknown attack and the requirement it violated. It gives a concrete method
+for our hypothesis-first path. \textbf{Gap:} it performs diagnosis only, with no
+attack--defense loop.
+
+% -------------------------------------------------------------------
+\section{Surveys and Foundations}
+
+\subsection{When LLMs Meet Cybersecurity: A Systematic Literature Review}
+\paperinfo{J. Zhang et al., \textit{Cybersecurity} (Springer), 2025, arXiv:2405.03644~\cite{zhang2025llmcyber}}
+This review covers more than 300 works across 25 LLMs and over 10 security tasks.
+It is the main peer-reviewed foundation for our related work. \textbf{Gap:} it is
+a broad survey that provides motivation only.
+
+\subsection{Large Language Models for Cyber Security: A Systematic Literature Review (LLM4Security)}
+\paperinfo{H. Xu et al., arXiv:2405.04760, 2024~\cite{xu2024llm4security}}
+This is a second broad review of LLMs across security tasks. It adds breadth to
+our related work. \textbf{Gap:} it is a task survey and does not propose a
+framework.
+
+\subsection{Forewarned is Forearmed: A Survey on LLM-based Agents in Autonomous Cyberattacks}
+\paperinfo{M. Xu et al., arXiv:2505.12786, 2025~\cite{xu2025forewarned}}
+This survey breaks attack agents into scouting, memory, reasoning, and action. It
+warns of ``Cyber Threat Inflation'', where attacks become cheaper and larger in
+scale. It shows why autonomous defense is urgent. \textbf{Gap:} it surveys the
+attacker side; the defense side is missing.
+
+\subsection{From Texts to Shields: Convergence of LLMs and Cybersecurity}
+\paperinfo{T. Li et al., arXiv:2505.00841, 2025~\cite{li2025shields}}
+This paper directly describes the purple-teaming model: a red agent attacks, a
+blue agent learns to defend, and a purple agent transfers the lessons between
+them. It shows that our core idea is already recognised in the literature.
+\textbf{Gap:} it is a survey that describes the idea but does not build it.
+
+\section{Comparison of Existing Systems}
+
+Table~\ref{tab:compare} compares the main groups of existing work with
+PurpleAgents on five features: whether the system attacks, whether it defends,
+what kind of reasoning it uses to reach a decision, whether it has a learning
+loop, and whether it includes human approval. Each row summarises a group of
+papers, based on our reading of their abstracts. ``Not addressed'' means the
+feature is not part of the work's stated contribution.
+
+\begin{table}[H]
+\centering
+\caption{Comparison of existing systems with PurpleAgents}
+\label{tab:compare}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{@{}P{0.19\textwidth} P{0.095\textwidth} P{0.11\textwidth} Y Y P{0.15\textwidth}@{}}
+\toprule
+\textbf{System group} & \textbf{Attack} & \textbf{Defense} & \textbf{Reasoning type} & \textbf{Learning loop} & \textbf{Human approval} \\
+\midrule
+Autonomous purple teaming~\cite{park2025autopt,zhou2024pad} & Yes & Yes & Single score or trained classifier & Co-evolution / co-training; no stored lessons & Not addressed \\
+Offensive (red) agents~\cite{kong2025vulnbot,challita2025redteamllm,mamun2026adversary,deng2024pentestgpt,xu2024autoattacker,fang2024hack,singer2025incalmo} & Yes & No & Single-path LLM planning; LLM-as-judge in~\cite{mamun2026adversary} & No & Not addressed \\
+Defensive / SOC agents~\cite{wei2025cortex,soc2025survey,lazer2026agentic} & No & Yes & Multi-agent, evidence-based single decision & No & Recommended in~\cite{lazer2026agentic} \\
+RL cyber operations~\cite{baillie2020cyborg,palmer2024drl,symes2024entity,singh2025hmarl,li2023redcase,shaikh2026soar} & Yes (simulated) & Yes (simulated) & Learned policy (reward-driven) & Reward-based training, not lesson-based & Not addressed \\
+Dual / abductive reasoning~\cite{araujo2021evidential,ramkumar2025abductive} & No & Diagnosis only & Hypothesis-based, with confidence & No & Not addressed \\
+Surveys and position papers~\cite{abuadbba2025peril,zhang2025llmcyber,xu2024llm4security,xu2025forewarned,li2025shields} & Described & Described & Discussed only & Described in~\cite{li2025shields}, not built & Recommended in~\cite{abuadbba2025peril} \\
+\midrule
+\textbf{PurpleAgents (proposed)} & \textbf{Yes} & \textbf{Yes} & \textbf{Dual: evidence-first + hypothesis-first, with convergence check} & \textbf{Closed loop of verified, stored lessons} & \textbf{Required for high-impact changes} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The table shows the pattern clearly. Each group is strong in one or two columns,
+but no group covers all five. In particular, no existing group combines dual-path
+reasoning with a closed loop of stored, verified lessons under human approval.
+
+% -------------------------------------------------------------------
+\section{Summary}
+
+Across these works, attack agents and defense agents are each well developed, and
+reasoning and learning methods exist separately. However, no existing system
+joins them into one closed loop that learns from every missed attack. That
+integrated loop --- continuous attack and defense, dual-path reasoning,
+validation, auditable memory, and learning --- is the gap that PurpleAgents
+fills.
