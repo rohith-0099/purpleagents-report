@@ -1,0 +1,126 @@
+\chapter{Preliminary Analysis}
+\label{ch:analysis}
+
+\section{Tools Used}
+
+The tools are described by category. The exact models and hosting options will
+be chosen during implementation.
+
+\begin{itemize}
+  \item \textbf{Attack generation (red side):} open-source red-teaming tools and
+  public jailbreak and prompt-injection datasets, used to create and vary attack
+  prompts.
+  \item \textbf{Target model:} an open-source LLM, run locally or through a
+  cloud-hosted inference API. The final choice will be made during
+  implementation.
+  \item \textbf{Defense (blue side):} an open-source guardrail /
+  safety-classifier toolkit to detect and block unsafe responses.
+  \item \textbf{Reasoning / judge:} a reasoning model that is prompted to run the
+  evidence-first and hypothesis-first checks.
+  \item \textbf{Orchestration:} a Python framework that connects the agents, the
+  reasoning engine, and the memory.
+\end{itemize}
+
+\section{Data Sources}
+
+PurpleAgents uses three kinds of data. It is important to understand where each
+one comes from.
+
+\begin{itemize}
+  \item \textbf{Hypotheses (attack categories):} a prepared list built by
+  combining several public sources --- the OWASP Top 10 for LLM Applications, the
+  OWASP Agentic Top 10, MITRE ATLAS, and open jailbreak and prompt-injection
+  datasets. This list is defined once and is used by the hypothesis-first path.
+  \item \textbf{Attack prompts:} drawn from open jailbreak and injection
+  datasets, and then extended by the red agent, which generates new variations.
+  \item \textbf{Benign prompts:} a small set of ordinary, harmless requests,
+  taken from public instruction datasets. These are used to check that new fixes
+  do not block normal use, and to measure the false-flag rate.
+  \item \textbf{Evidence:} this is not downloaded. It is created live every time
+  an attack runs, and consists of the prompt plus the model's actual response.
+  This is the data that the reasoning engine works on.
+\end{itemize}
+
+\noindent\textbf{Note:} the project does not depend on a single fixed dataset.
+Most of its data is generated during testing.
+
+\section{Evaluation Metrics}
+
+Table~\ref{tab:metrics} defines the metrics that will be used to evaluate
+PurpleAgents. Here, an attack is \emph{successful} when the verified conclusion
+says the target produced unsafe output and the blue agent did not block it. All
+values will be measured during implementation; \textbf{no values are reported
+in this report}, and any target levels mentioned are \emph{expected} only.
+
+\begin{table}[H]
+\centering
+\caption{Evaluation metrics (all values to be measured; expectations only)}
+\label{tab:metrics}
+\small
+\begin{tabularx}{\textwidth}{@{}P{0.19\textwidth} Y Y@{}}
+\toprule
+\textbf{Metric} & \textbf{Meaning} & \textbf{How it will be measured} \\
+\midrule
+Attack Success Rate (ASR) & Fraction of attacks that got through the defense. Lower is better. & $\mathrm{ASR}_r$ = successful attacks in round $r$ $\div$ total attacks in round $r$. \\
+Detection Rate (DR) & Fraction of attacks that were caught (catch-rate). Higher is better. & $\mathrm{DR}_r = 1 - \mathrm{ASR}_r$, computed per round. \\
+Improvement across rounds & How much the defense improved through learning. & $\Delta\mathrm{DR} = \mathrm{DR}_r - \mathrm{DR}_1$; expected to be positive, though not every round need improve. \\
+Generalization & Whether improvements carry over to attacks the system never used for fixing. & DR on the held-out attack set, measured before and after the learning rounds, compared with DR on the attacks used for fixing. \\
+False-flag rate & How often the defense wrongly blocks harmless requests. Lower is better. & Benign prompts blocked $\div$ total benign prompts, measured after each round to show that fixes do not harm normal use. \\
+Disagreement rate & How often the two reasoning paths disagree and a case is sent to a human. & Cases where $A \neq B$ $\div$ total cases; a very high value would mean the judge prompts need improvement. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A good outcome is a detection rate that rises across rounds, holds up on the
+held-out set, and does not come with a rising false-flag rate. Looking at these
+metrics together prevents a misleading result, such as a ``perfect'' defense that
+simply blocks everything.
+
+\section{Expected Behaviour and Evaluation Plan}
+
+\noindent\textit{All results in this section are \textbf{expected}. The system is
+at the design stage and has not yet been built. No measured results are
+reported here.}
+
+\medskip
+The system will be evaluated by running repeated attack--defend cycles on the
+target model:
+
+\begin{enumerate}
+  \item \textbf{Round 1 (baseline):} send a set of attack prompts and measure how
+  many get through. This gives the baseline \textbf{Attack Success Rate (ASR)}
+  and the \textbf{Detection Rate}, or catch-rate, where
+  $\mathrm{DR} = 1 - \mathrm{ASR}$.
+  \item \textbf{Reflect and fix:} the reflection step finds why attacks were
+  missed and proposes fixes. After human approval, the lessons are stored in
+  memory and applied.
+  \item \textbf{Round 2 and beyond:} attack again with the same prompts and with
+  new ones, and measure the new catch-rate.
+\end{enumerate}
+
+\subsection{Expected Result}
+
+The catch-rate is expected to rise across rounds as the system learns --- for
+example, from a lower value in Round~1 to higher values in later rounds ---
+without a human writing the fixes. Figure~\ref{fig:trend} shows this
+\emph{expected and illustrative} trend. It is not a measured result.
+
+\reportfigure[0.8\textwidth]{fig-6-1.png}{Expected (illustrative) improvement in defense across cycles. Illustrative only --- actual values will be measured during implementation}{fig:trend}
+
+\subsection{Generalization Check}
+
+A part of the attack prompts will be kept aside as a \emph{held-out set}. The
+system will never use this set for building fixes. Testing on it later will show
+whether the improvements are real, or whether the system has only memorized the
+attacks it has already seen.
+
+\subsection{Limitations}
+
+\begin{itemize}
+  \item The improvement curve will not be a perfect straight line. Real learning
+  is bumpy, and some rounds may show little or no gain.
+  \item Results will depend on the chosen model, the attack set, and the
+  available compute.
+  \item The actual numbers will be measured during implementation. This report
+  presents the design and the evaluation plan only.
+\end{itemize}
