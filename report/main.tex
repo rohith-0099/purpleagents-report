@@ -1,0 +1,127 @@
+% PurpleAgents -- B.Tech Phase-1 Project Report (KTU style)
+% Full report: title page, certificate, declaration, abstract,
+% acknowledgement, contents, lists, chapters and references.
+\documentclass[12pt,a4paper,oneside]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathptmx}
+\usepackage[left=1.5in,right=1in,top=1in,bottom=1in]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[font=small,labelfont=bf,justification=centering]{caption}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
+\captionsetup[table]{position=top,skip=6pt}
+\renewcommand{\arraystretch}{1.25}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\setlength{\emergencystretch}{2em}
+\lstset{basicstyle=\ttfamily\small,frame=single,framesep=6pt,xleftmargin=8pt,xrightmargin=8pt,
+  columns=fullflexible,breaklines=true,showstringspaces=false,aboveskip=10pt,belowskip=10pt}
+\onehalfspacing
+\setlist{itemsep=2pt,topsep=4pt}
+
+% ---- Chapter heading: "CHAPTER n" centred, title below ----
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\centering}
+  {\large CHAPTER \thechapter}{8pt}{\Large\MakeUppercase}
+\titlespacing*{\chapter}{0pt}{0pt}{24pt}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalfont\normalsize\bfseries\itshape}{}{0em}{}
+
+% ---- Contents / LoF titles ----
+\renewcommand{\contentsname}{CONTENTS}
+\renewcommand{\listfigurename}{LIST OF FIGURES}
+\renewcommand{\listtablename}{LIST OF TABLES}
+\renewcommand{\bibname}{REFERENCES}
+\renewcommand{\cfttoctitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cftafterloftitle}{\hfill}
+\renewcommand{\cftlottitlefont}{\hfill\Large\bfseries}
+\renewcommand{\cftafterlottitle}{\hfill}
+\setlength{\cfttabindent}{0pt}
+\setlength{\cfttabnumwidth}{3em}
+\renewcommand{\cftchapdotsep}{\cftdotsep}
+\renewcommand{\cftchappresnum}{}
+\setlength{\cftfigindent}{0pt}
+\setlength{\cftfignumwidth}{3em}
+
+% ---- Page style: number bottom centre ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---- Figure helper: uses figures/<file> if present, else a labelled placeholder ----
+\newcommand{\reportfigure}[4][0.95\textwidth]{%
+  \begin{figure}[H]
+    \centering
+    \IfFileExists{figures/#2}{%
+      \includegraphics[width=#1,height=0.72\textheight,keepaspectratio]{#2}%
+    }{%
+      \fbox{\parbox[c][6cm][c]{0.85\textwidth}{\centering
+        \textbf{Figure placeholder}\\[4pt]
+        \texttt{figures/#2}\\[4pt]
+        \small(export from \texttt{docs/diagrams/} and drop the PNG here)}}%
+    }
+    \caption{#3}
+    \label{#4}
+  \end{figure}}
+
+\begin{document}
+
+% ================= FRONT MATTER =================
+% Title, certificate, declaration unnumbered; abstract = i, acknowledgement = ii,
+% contents = iii, then lists continue in roman.
+\input{chapters/frontmatter}
+
+\begin{singlespace}
+\tableofcontents
+\end{singlespace}
+\clearpage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF FIGURES}
+\listoffigures
+\clearpage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{LIST OF TABLES}
+\listoftables
+\clearpage
+
+\input{chapters/symbols}
+
+% ================= MAIN MATTER =================
+\clearpage
+\pagenumbering{arabic}
+
+\input{chapters/ch1-introduction}
+\input{chapters/ch2-literature}
+\input{chapters/ch3-problem}
+\input{chapters/ch4-requirements}
+\input{chapters/ch5-design}
+\input{chapters/ch6-analysis}
+\input{chapters/ch7-feasibility}
+\input{chapters/ch8-conclusion}
+
+\input{chapters/references}
+
+\end{document}
