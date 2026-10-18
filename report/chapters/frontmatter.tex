@@ -1,0 +1,148 @@
+% =====================================================================
+%  FRONT MATTER: title page, certificate, declaration (unnumbered),
+%  abstract (i) and acknowledgement (ii).
+%  Layout follows the department's seminar/project report template.
+% =====================================================================
+
+% ---------------- details (edit here) ----------------
+\newcommand{\reporttitle}{PurpleAgents}
+\newcommand{\reportsubtitle}{A Dual-Reasoning Agentic Framework for Intelligent Purple-Team Cyber Defense}
+\newcommand{\reporttitleflat}{PurpleAgents: A Dual-Reasoning Agentic Framework for Intelligent Purple-Team Cyber Defense}
+\newcommand{\studentA}{ANJIMA REMANAN}
+\newcommand{\regA}{KNP23AD010}
+\newcommand{\studentB}{ROHITH CHANDRAN}
+\newcommand{\regB}{LKNP23AD042}
+\newcommand{\studentC}{ASHID N}
+\newcommand{\regC}{LKNP23AD041}
+\newcommand{\guidename}{Dr JYOTHI R L}
+\newcommand{\guidedesig}{Associate Professor}
+\newcommand{\coordname}{ATHIRA SANKER}
+\newcommand{\coorddesig}{Assistant Professor}
+\newcommand{\hodname}{Dr SMITHA P}
+\newcommand{\principalname}{Dr. SMITHA DHARAN} % TODO: confirm Principal
+\newcommand{\reportmonth}{Nov 2026}
+\newcommand{\acyear}{2026-27}
+\newcommand{\declplace}{Karunagappally}
+
+% =====================================================================
+%  TITLE PAGE
+% =====================================================================
+\pagenumbering{Alph}  % hidden (empty page style); avoids duplicate hyperref anchors
+\thispagestyle{empty}
+\begin{center}
+\vspace*{0.2cm}
+{\LARGE\bfseries \reporttitle}\\[0.4cm]
+{\large\bfseries \reportsubtitle}\\[1.4cm]
+{\large\itshape A Project Report}\\[0.5cm]
+{\normalsize\itshape Submitted to the APJ Abdul Kalam Technological University}\\[0.2cm]
+{\normalsize\itshape in partial fulfillment of requirements for the award of degree}\\[0.5cm]
+{\large\bfseries\itshape Bachelor of Technology}\\[0.3cm]
+{\itshape in}\\[0.3cm]
+{\large\bfseries\itshape Computer Science and Engineering}\\[0.3cm]
+{\itshape by}\\[0.4cm]
+{\large\bfseries \studentA{} (\regA)}\\[0.15cm]
+{\large\bfseries \studentB{} (\regB)}\\[0.15cm]
+{\large\bfseries \studentC{} (\regC)}\\[1.0cm]
+\includegraphics[width=4.2cm]{logo.png}\\[1.0cm]
+{\bfseries\small DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING}\\[0.1cm]
+{\bfseries\small COLLEGE OF ENGINEERING KARUNAGAPPALLY - 690523, KERALA}\\[0.1cm]
+{\bfseries\footnotesize \reportmonth}
+\end{center}
+\clearpage
+
+% =====================================================================
+%  CERTIFICATE
+% =====================================================================
+\thispagestyle{empty}
+\begin{center}
+{\bfseries DEPT. OF COMPUTER SCIENCE \& ENGINEERING
+\\ COLLEGE OF ENGINEERING KARUNAGAPPALLY}\\[0.3cm]
+{\bfseries \acyear}\\[0.5cm]
+\includegraphics[width=3.4cm]{logo.png}\\[0.8cm]
+{\bfseries CERTIFICATE}
+\end{center}
+\vspace{0.3cm}
+\doublespacing
+\noindent\hspace{1.2em}This is to certify that the report entitled \textbf{\reporttitleflat} submitted by \textbf{\studentA} (\regA), \textbf{\studentB} (\regB) and \textbf{\studentC} (\regC), to the APJ Abdul Kalam Technological University in partial fulfillment of the B.Tech. degree in Computer Science and Engineering is a bonafide record of the project work carried out by them under our guidance and supervision. This report in any form has not been submitted to any other University or Institute for any purpose.
+\onehalfspacing
+\vspace{1.2cm}
+
+\noindent
+\begin{tabular}[t]{@{}l@{}}
+\textbf{\guidename}\\ (Project Guide)\\ \guidedesig\\ Dept.\ of CSE\\ College of Engineering\\ Karunagappally
+\end{tabular}%
+\hfill
+\begin{tabular}[t]{@{}l@{}}
+\textbf{\coordname}\\ (Project Coordinator)\\ \coorddesig\\ Dept.\ of CSE\\ College of Engineering\\ Karunagappally
+\end{tabular}
+
+\vspace{1.2cm}
+\begin{center}
+\textbf{\hodname}\\ (Head of Department)\\ Dept.\ of CSE\\ College of Engineering\\ Karunagappally
+\end{center}
+\clearpage
+
+% =====================================================================
+%  DECLARATION
+% =====================================================================
+\thispagestyle{empty}
+\begin{center}{\LARGE\bfseries DECLARATION}\end{center}
+\vspace{0.4cm}
+\noindent We hereby declare that the project report \textbf{\reporttitleflat}, submitted for partial fulfillment of the requirements for the award of degree of Bachelor of Technology of the APJ Abdul Kalam Technological University, Kerala is a bonafide work done by us under supervision of \guidename.
+
+\noindent This submission represents our ideas in our own words and where ideas or words of others have been included, we have adequately and accurately cited and referenced the original sources.
+
+\noindent We also declare that we have adhered to ethics of academic honesty and integrity and have not misrepresented or fabricated any data or idea or fact or source in our submission. We understand that any violation of the above will be a cause for disciplinary action by the institute and/or the University and can also evoke penal action from the sources which have thus not been properly cited or from whom proper permission has not been obtained. This report has not been previously formed the basis for the award of any degree, diploma or similar title of any other University.
+
+\vspace{1.2cm}
+\noindent
+\begin{minipage}[b]{0.38\textwidth}
+\raggedright
+Place: \declplace\\[0.3cm]
+Date: \rule{3.5cm}{0.4pt}
+\end{minipage}%
+\hfill
+\begin{minipage}[b]{0.6\textwidth}
+\raggedleft
+\begin{tabular}{r}
+\studentA{} (\regA)\\[0.9cm]
+\studentB{} (\regB)\\[0.9cm]
+\studentC{} (\regC)
+\end{tabular}
+\end{minipage}
+\clearpage
+
+% =====================================================================
+%  ABSTRACT (i) and ACKNOWLEDGEMENT (ii)
+% =====================================================================
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\chapter*{ABSTRACT}
+\addcontentsline{toc}{chapter}{ABSTRACT}
+PurpleAgents is an autonomous \emph{purple-team} framework for testing and strengthening the safety of AI systems such as large language models (LLMs), chatbots, and AI agents. Traditional security work is split: attackers (red teams) test a system only now and then, defenders (blue teams) react after something goes wrong, and the lessons from each test are rarely turned into lasting protection. PurpleAgents brings attack and defense together into one continuous, self-improving cycle inside a safe, authorized environment.
+
+The core of the framework is a \textbf{dual-reasoning engine}. For every attack, the engine reaches a conclusion in two independent ways. The first path is \textbf{evidence-first}: it looks at what actually happened --- the prompt sent and the model's response --- and decides whether the attack succeeded. The second path is \textbf{hypothesis-first}: it takes a list of known attack types and tests the evidence against each one, keeping only the explanation that fits. A conclusion is accepted only when both paths agree. This prevents the system from trusting a single wrong signal.
+
+An offensive (red) agent sends adversarial prompts such as jailbreaks and prompt injections to the target model, while a defensive (blue) agent tries to detect and block unsafe behaviour. A reflection step then studies each missed attack, finds the exact reason it slipped through, and proposes a concrete fix such as a stronger guardrail rule. Every attack, its evidence, the reasoning path, the confidence level, and the outcome are stored in an auditable memory. The defining idea is a \textbf{closed learning loop}: a missed attack is not just a failure --- it becomes a verified lesson, so the defense improves on the next cycle. Human approval governs any high-impact change. By attacking, defending, reasoning, and learning in one loop, PurpleAgents aims to make an AI system measurably harder to break over time.
+\clearpage
+
+\chapter*{ACKNOWLEDGEMENT}
+\addcontentsline{toc}{chapter}{ACKNOWLEDGEMENT}
+We take this opportunity to express our deepest sense of gratitude and sincere thanks to everyone who helped us to complete this work successfully.
+
+We are profoundly grateful to \principalname, Principal, College of Engineering Karunagappally, for the encouragement, constant support, and for providing the necessary facilities that enabled us to carry out this project work.
+
+We express our sincere thanks to \hodname, Head of Department, Computer Science and Engineering, College of Engineering Karunagappally, for providing us with all the necessary facilities and support.
+
+We would like to place on record our sincere gratitude to our project guide \guidename, \guidedesig, Computer Science and Engineering, College of Engineering Karunagappally, for the valuable guidance and mentorship throughout the course of this project.
+
+We would like to express our sincere gratitude to our project coordinator \coordname, \coorddesig, Computer Science and Engineering, College of Engineering Karunagappally, for the support and co-operation.
+
+Finally, we thank our families and friends, who contributed to the successful completion of this project work.
+
+\vspace{0.8cm}
+\noindent\textbf{\studentA}\\
+\textbf{\studentB}\\
+\textbf{\studentC}
+\clearpage
