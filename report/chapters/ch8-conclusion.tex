@@ -1,0 +1,46 @@
+\chapter{Conclusion}
+\label{ch:concl}
+
+\section{Expected Outcomes}
+
+At the end of the project, the following outcomes are expected. They are goals
+for the implementation phase, not results that have already been achieved.
+
+\begin{itemize}
+  \item \textbf{A working framework.} A Python-based PurpleAgents framework with
+  red and blue agents, a dual-reasoning engine, reflection, validation, an
+  auditable memory, and human approval, operated through a CLI.
+  \item \textbf{A measurable improvement in defense.} Over repeated
+  attack--defend rounds, the detection rate is expected to rise and the attack
+  success rate to fall, without a human writing the fixes.
+  \item \textbf{Fewer wrong conclusions.} Dual-path reasoning is expected to
+  catch judging mistakes that a single path would miss, with uncertain cases sent
+  to a human instead of being decided silently.
+  \item \textbf{A complete audit trail.} Every attack, decision, fix, and approval
+  is expected to be traceable in the memory.
+  \item \textbf{Clear CLI reports.} Command-line summaries that show each
+  round's results, the trend in detection rate, and the lessons learned.
+\end{itemize}
+
+\section{Conclusion}
+
+Phase~1 of PurpleAgents has established a clear design and a feasibility
+foundation for an autonomous purple-team framework. The framework continuously
+attacks and defends an AI model and learns from every missed attack.
+
+A verified research gap was identified through a review of recent work. Existing
+systems handle attack, defense, or reasoning separately, but none of them
+integrate all three into one closed, self-improving loop.
+
+The proposed design fills this gap. It uses a dual-reasoning engine that accepts
+a conclusion only when the evidence-first and hypothesis-first paths agree. It
+adds a reflection step that turns misses into fixes, an auditable memory that
+records every decision, and a closed learning loop that runs under human
+approval.
+
+The feasibility study confirms that the project can be built with free,
+open-source tools on modest hardware. The planned evaluation --- repeated
+attack--defend cycles that measure the rise in the defense catch-rate --- will
+test the system's core claim: that the defense improves automatically over time.
+The remaining work is implementation, testing, and the measurement of real
+results in the next phase.
