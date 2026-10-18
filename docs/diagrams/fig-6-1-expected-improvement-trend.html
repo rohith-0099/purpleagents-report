@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expected Defense Improvement</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:           #f4f5f7;
+    --surface-1:      #fcfcfb;
+    --border:         #e3e3df;
+    --grid:           #e8e8e4;
+    --axis:           #c9c8c2;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #7a7973;
+    --series-1:       #2a78d6;
+    --series-wash:    rgba(42, 120, 214, 0.10);
+    --note-bg:        #fff6e0;
+    --note-border:    #eda100;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #121211; --surface-1: #1a1a19; --border: #2e2e2c; --grid: #2a2a28; --axis: #474743;
+      --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #9a998f;
+      --series-1: #3987e5; --series-wash: rgba(57, 135, 229, 0.14);
+      --note-bg: #2a2310; --note-border: #c98500;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #121211; --surface-1: #1a1a19; --border: #2e2e2c; --grid: #2a2a28; --axis: #474743;
+    --text-primary: #ffffff; --text-secondary: #c3c2b7; --text-muted: #9a998f;
+    --series-1: #3987e5; --series-wash: rgba(57, 135, 229, 0.14);
+    --note-bg: #2a2310; --note-border: #c98500;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 32px 16px; background: var(--page); color: var(--text-primary);
+    font: 14px/1.45 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  h1 { font-size: 20px; margin: 0; font-weight: 650; }
+  .actions { display: flex; gap: 8px; }
+  button {
+    font: inherit; font-size: 13px; padding: 7px 14px; border-radius: 8px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+  }
+  button.primary { background: #111; color: #fff; border-color: #111; }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 16px;
+    padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,.04), 0 6px 24px rgba(0,0,0,.04);
+    position: relative;
+  }
+  svg { display: block; width: 100%; height: auto; }
+  .tick { fill: var(--text-muted); font-size: 12px; }
+  .axis-title { fill: var(--text-secondary); font-size: 13px; font-weight: 600; }
+  .chart-title { fill: var(--text-primary); font-size: 16px; font-weight: 650; }
+  .val { fill: var(--text-primary); font-size: 13px; font-weight: 600; }
+  .note-text { fill: var(--text-primary); font-size: 12.5px; font-weight: 600; }
+  .tip {
+    position: absolute; pointer-events: none; opacity: 0; transition: opacity .12s;
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 10px; font-size: 12.5px; box-shadow: 0 4px 16px rgba(0,0,0,.12); white-space: nowrap;
+  }
+  .tip b { font-weight: 650; }
+  .tip .muted { color: var(--text-muted); }
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); }
+  th { color: var(--text-secondary); font-weight: 600; }
+  td.num { font-variant-numeric: tabular-nums; }
+  .hidden { display: none; }
+  .foot { color: var(--text-muted); font-size: 12.5px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <h1>Figure 6.1 — Expected defense improvement</h1>
+    <div class="actions">
+      <button id="toggleTable" type="button" aria-pressed="false">Table view</button>
+      <button id="exportPng" class="primary" type="button">Export PNG</button>
+    </div>
+  </div>
+
+  <div class="card" id="card">
+    <svg id="chart" viewBox="0 0 800 430" role="img"
+         aria-labelledby="ctitle cdesc" xmlns="http://www.w3.org/2000/svg">
+      <title id="ctitle">Expected (illustrative) improvement in defense across cycles</title>
+      <desc id="cdesc">Illustrative line chart: detection rate rises from round 1 to round 4 with a small dip at round 3. Not measured data.</desc>
+      <g id="plot"></g>
+    </svg>
+    <div class="tip" id="tip" role="status" aria-live="polite"></div>
+    <div id="tableWrap" class="hidden">
+      <table>
+        <thead><tr><th>Round</th><th>Detection / catch-rate (illustrative)</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+  <p class="foot">Values are illustrative placeholders that show the expected shape of the trend (generally rising, slightly bumpy). They are not results. Actual values will be measured during implementation.</p>
+</div>
+
+<script>
+(function () {
+  // Illustrative only — not measured.
+  var data = [
+    { round: 1, rate: 48 },
+    { round: 2, rate: 63 },
+    { round: 3, rate: 60 },
+    { round: 4, rate: 76 }
+  ];
+
+  var W = 800, H = 430;
+  var m = { top: 80, right: 48, bottom: 64, left: 76 };
+  var pw = W - m.left - m.right, ph = H - m.top - m.bottom;
+  var x = function (r) { return m.left + (r - 1) / 3 * pw; };
+  var y = function (v) { return m.top + ph - v / 100 * ph; };
+  var NS = "http://www.w3.org/2000/svg";
+  var plot = document.getElementById("plot");
+
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (text != null) e.textContent = text;
+    plot.appendChild(e);
+    return e;
+  }
+
+  // Illustrative note (drawn on the figure itself so it survives export)
+  el("rect", { x: m.left, y: 16, width: 488, height: 30, rx: 8,
+               fill: "var(--note-bg)", stroke: "var(--note-border)", "stroke-width": 1 });
+  el("text", { x: m.left + 12, y: 36, "class": "note-text" },
+     "Illustrative — actual values measured during implementation.");
+
+  // Gridlines + y ticks
+  [0, 20, 40, 60, 80, 100].forEach(function (v) {
+    el("line", { x1: m.left, x2: m.left + pw, y1: y(v), y2: y(v),
+                 stroke: v === 0 ? "var(--axis)" : "var(--grid)", "stroke-width": 1 });
+    el("text", { x: m.left - 12, y: y(v) + 4, "text-anchor": "end", "class": "tick" }, v + "%");
+  });
+  // x ticks
+  data.forEach(function (d) {
+    el("text", { x: x(d.round), y: m.top + ph + 24, "text-anchor": "middle", "class": "tick" }, "Round " + d.round);
+  });
+  // Axis titles
+  el("text", { x: m.left + pw / 2, y: H - 14, "text-anchor": "middle", "class": "axis-title" }, "Round (attack–defend cycle)");
+  el("text", { x: 20, y: m.top + ph / 2, "text-anchor": "middle", "class": "axis-title",
+               transform: "rotate(-90 20 " + (m.top + ph / 2) + ")" }, "Detection / catch-rate (%)");
+
+  // Area wash + line
+  var pts = data.map(function (d) { return x(d.round) + "," + y(d.rate); });
+  el("path", { d: "M" + x(1) + "," + y(0) + " L" + pts.join(" L") + " L" + x(4) + "," + y(0) + " Z",
+               fill: "var(--series-wash)" });
+  el("polyline", { points: pts.join(" "), fill: "none", stroke: "var(--series-1)",
+                   "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round" });
+
+  // Crosshair (hidden until hover)
+  var cross = el("line", { y1: m.top, y2: m.top + ph, stroke: "var(--axis)", "stroke-width": 1, opacity: 0 });
+
+  // Markers with surface ring
+  var dots = data.map(function (d) {
+    return el("circle", { cx: x(d.round), cy: y(d.rate), r: 5, fill: "var(--series-1)",
+                          stroke: "var(--surface-1)", "stroke-width": 2 });
+  });
+  // Selective direct labels: start and end only
+  [data[0], data[data.length - 1]].forEach(function (d) {
+    el("text", { x: x(d.round), y: y(d.rate) - 14, "text-anchor": "middle", "class": "val" }, "~" + d.rate + "%");
+  });
+
+  // Hover layer: one column-wide hit target per round
+  var tip = document.getElementById("tip");
+  var card = document.getElementById("card");
+  var svg = document.getElementById("chart");
+  data.forEach(function (d, i) {
+    var hit = el("rect", { x: x(d.round) - pw / 6, y: m.top, width: pw / 3, height: ph,
+                           fill: "transparent", tabindex: 0,
+                           "aria-label": "Round " + d.round + ": about " + d.rate + "% (illustrative)" });
+    function show() {
+      cross.setAttribute("x1", x(d.round)); cross.setAttribute("x2", x(d.round)); cross.setAttribute("opacity", 1);
+      dots[i].setAttribute("r", 7);
+      tip.innerHTML = "<b>Round " + d.round + "</b> · ~" + d.rate + "% <span class='muted'>(illustrative)</span>";
+      var s = svg.getBoundingClientRect(), c = card.getBoundingClientRect();
+      var px = s.left - c.left + x(d.round) / W * s.width;
+      var py = s.top - c.top + y(d.rate) / H * s.height;
+      tip.style.left = Math.min(Math.max(px - 80, 8), c.width - 200) + "px";
+      tip.style.top = (py - 52) + "px";
+      tip.style.opacity = 1;
+    }
+    function hide() { cross.setAttribute("opacity", 0); dots[i].setAttribute("r", 5); tip.style.opacity = 0; }
+    hit.addEventListener("mouseenter", show); hit.addEventListener("focus", show);
+    hit.addEventListener("mouseleave", hide); hit.addEventListener("blur", hide);
+  });
+
+  // Table view
+  var tbody = document.getElementById("tbody");
+  data.forEach(function (d) {
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td>Round " + d.round + "</td><td class='num'>~" + d.rate + "%</td>";
+    tbody.appendChild(tr);
+  });
+  var tbtn = document.getElementById("toggleTable");
+  tbtn.addEventListener("click", function () {
+    var w = document.getElementById("tableWrap");
+    var on = w.classList.toggle("hidden") === false;
+    tbtn.setAttribute("aria-pressed", String(on));
+  });
+
+  // Export PNG (light theme, 3x, white background) for the report
+  document.getElementById("exportPng").addEventListener("click", function () {
+    var root = document.documentElement, prev = root.getAttribute("data-theme");
+    root.setAttribute("data-theme", "light");
+    var clone = svg.cloneNode(true);
+    var cs = getComputedStyle(root);
+    var css = ".tick{fill:#7a7973;font:12px system-ui,sans-serif}.axis-title{fill:#52514e;font:600 13px system-ui,sans-serif}" +
+              ".chart-title{fill:#0b0b0b;font:650 16px system-ui,sans-serif}.val{fill:#0b0b0b;font:600 13px system-ui,sans-serif}" +
+              ".note-text{fill:#0b0b0b;font:600 12.5px system-ui,sans-serif}";
+    var style = document.createElementNS(NS, "style"); style.textContent = css;
+    clone.insertBefore(style, clone.firstChild);
+    var src = new XMLSerializer().serializeToString(clone).replace(/var\((--[a-z0-9-]+)\)/g, function (_, v) {
+      return cs.getPropertyValue(v).trim();
+    });
+    if (prev) root.setAttribute("data-theme", prev); else root.removeAttribute("data-theme");
+    var img = new Image(), scale = 3;
+    img.onload = function () {
+      var c = document.createElement("canvas"); c.width = W * scale; c.height = H * scale;
+      var g = c.getContext("2d"); g.fillStyle = "#ffffff"; g.fillRect(0, 0, c.width, c.height);
+      g.drawImage(img, 0, 0, c.width, c.height);
+      var a = document.createElement("a"); a.download = "fig-6-1.png"; a.href = c.toDataURL("image/png"); a.click();
+    };
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(src);
+  });
+})();
+</script>
+</body>
+</html>
