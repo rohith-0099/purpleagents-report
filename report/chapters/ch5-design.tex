@@ -249,6 +249,11 @@ paths, the confidence, the outcome, the root cause, the fix, the re-test result,
 and the human decision. The memory also feeds the learning loop: it gives the
 red agent the categories to focus on, gives reflection the past lessons, and
 gives the CLI the per-round results for its reports.
+The memory is planned to be stored in a PostgreSQL database, which is how the
+append-only record is implemented. Each attack's full log will be kept as a JSON
+(JSONB) record alongside structured fields for the attack, verdict, evidence,
+both reasoning paths, confidence, root cause, fix, re-test result, and human
+decision.
 \modio{Records from every other module.}{Stored lessons and audit trail;
 per-round metrics; lessons applied to the next cycle (the closed learning
 loop).}
